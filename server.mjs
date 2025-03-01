@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { handler } from "./server/entry.mjs"; // your server entry point from the node adapter
+import { handler } from "./dist/server/entry.mjs"; // your server entry point from the node adapter
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
