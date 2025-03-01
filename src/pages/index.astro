@@ -1,0 +1,83 @@
+---
+export const prerender = false;
+
+import Layout from "../layouts/Layout.astro";
+let result = "";
+
+async function upOrDown(website: string | URL | Request) {
+  try {
+    const response = await fetch(website);
+    if (
+      response.status.toString().startsWith("1") ||
+      response.status.toString().startsWith("2") ||
+      response.status.toString().startsWith("3")
+    ) {
+      return "Website is up!";
+    } else if (
+      response.status.toString().startsWith("4") ||
+      response.status.toString().startsWith("5")
+    ) {
+      return "Website is down...";
+    }
+  } catch (error) {
+    return "URL is wrong";
+  }
+}
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const website = formData.get("website")?.toString();
+
+  // Validate the URL
+  if (!website.startsWith("http://") && !website.startsWith("https://")) {
+    result = "URL is wrong";
+  } else {
+    result = await upOrDown(website);
+  }
+}
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<Layout>
+  <main class="absolute right-[23%] top-[40%]">
+    <div>
+      <h1 class="text-4xl font-black text-center">
+        Check whether your most important websites are working or not
+      </h1>
+      <h3 class="text-center text-slate-400">
+        Enter the website in the box and wait a few seconds for the result
+      </h3>
+    </div>
+    <div class="pt-4 absolute right-[40%]">
+      <form method="post">
+        <input
+          type="text"
+          class="bg-white block px-5 py-3 rounded hover:bg-slate-100 transition-all"
+          placeholder=" add http or https at the start."
+          name="website"
+        />
+        <button
+          class="bg-slate-400 block m-auto w-[40%] px-2 py-1 mt-1 rounded hover:bg-slate-500 hover:text-slate-700 transition-all cursor-pointer text-center"
+          >Lets go!</button
+        >
+      </form>
+
+      <div class="text-center text-slate-500 pt-3">
+        Result:
+        <b class="text-center text-slate-600 font-medium">{result}</b>
+      </div>
+      <div class="pt-70 absolute left-[5%] w-2xs text-slate-500">
+        <h5>
+          Copyright 2024-25 am |
+          <a
+            href="https://amsandwich.netlify.app/"
+            class="text-sky-600 underline">website</a
+          >
+          | 🌍
+        </h5>
+      </div>
+    </div>
+  </main>
+</Layout>
