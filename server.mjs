@@ -1,17 +1,17 @@
-// server.js (using middleware mode)
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { handler } from "./dist/server/entry.mjs"; // In middleware mode, the adapter exports a handler
+import { handler } from "./server/entry.mjs"; // your server entry point from the node adapter
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve static assets from the 'dist' folder
-app.use(express.static(path.join(__dirname, "dist")));
+// Serve static assets from the "client" folder.
+// This ensures that requests to /_astro/* return the actual CSS/JS files.
+app.use(express.static(path.join(__dirname, "client")));
 
-// Use Astro's SSR handler for all other routes
+// Use Astro’s SSR handler for all other routes.
 app.use(handler);
 
 const port = process.env.PORT || 3000;
